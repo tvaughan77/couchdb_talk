@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<mapping>
+    <class name="com.opower.couchdb_talk.model.JamendoData" auto-complete="true">
+        <map-to xml="JamendoData"/>
+        <field name="artists" type="com.opower.couchdb_talk.model.Artist" collection="arraylist">
+            <bind-xml name="artist" node="element" location="Artists" />
+        </field>
+    </class>
+        
+    <class name="com.opower.couchdb_talk.model.Artist" auto-complete="true">
+        <field name="id" type="java.lang.Long" />
+        <field name="albums" type="com.opower.couchdb_talk.model.Album" collection="arraylist">
+            <bind-xml name="album" node="element" location="Albums" />
+        </field>
+    </class>
+	
+    <class name="com.opower.couchdb_talk.model.Album" auto-complete="true">
+        <field name="id" type="java.lang.Long" />
+        <field name="id3genre" type="java.lang.Integer" />
+        <field name="tracks" type="com.opower.couchdb_talk.model.Track" collection="arraylist">
+            <bind-xml name="track" node="element" location="Tracks" />
+        </field>
+    </class>
+
+    <class name="com.opower.couchdb_talk.model.Track" auto-complete="true">
+        <field name="id" type="java.lang.Long" />
+        <field name="id3genre" type="java.lang.Integer" />
+        <field name="duration" type="java.lang.Float" />
+        <field name="numalbum" type="java.lang.Integer" />
+        <field name="tags" type="com.opower.couchdb_talk.model.Tag" collection="arraylist">
+            <bind-xml name="tag" node="element" location="Tags" />
+        </field>
+    </class>
+        
+    <class name="com.opower.couchdb_talk.model.Location" auto-complete="true">
+        <field name="latitude" type="string"/>
+        <field name="longitude" type="string"/>
+    </class>
+        
+    <class name="com.opower.couchdb_talk.model.Tag" auto-complete="true">
+        <field name="weight" type="java.lang.Float" />
+    </class>
+        
+</mapping>
