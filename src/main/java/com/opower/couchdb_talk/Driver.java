@@ -18,12 +18,22 @@ public class Driver {
     private XmlLoader xmlLoader;
     
     public void doStuff() {
+        runDiagnostics();
+        
+        loadArtists();
+        
+        
+    }
+    
+    private void runDiagnostics() {
         dao.runDiagnostics();
-        //        System.out.println(dao.getDesign());
+    }
+
+    private List<Artist> loadArtists() {
         LOGGER.log(Level.INFO, "Loading artists");
         List<Artist> artists = xmlLoader.getArtists();
         LOGGER.log(Level.INFO, "There are {0} artists", artists.size());
-        
+        return artists;
     }
     
     @Autowired
@@ -35,4 +45,5 @@ public class Driver {
     public void setXmlLoader(XmlLoader xmlLoader) {
         this.xmlLoader = xmlLoader;
     }
+
 }
