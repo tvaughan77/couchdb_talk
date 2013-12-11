@@ -24,6 +24,7 @@ public class Driver {
         
         saveArtists(artists);
         
+        saveArtist(artists.get(0));
         
     }
     
@@ -38,10 +39,12 @@ public class Driver {
         return artists;
     }
     
+    private void saveArtist(Artist artist) {
+        this.dao.saveArtist(artist);
+    }
+    
     private void saveArtists(List<Artist> artists) {
-        for (Artist artist : artists) {
-            this.dao.saveArtist(artist);
-        }
+        this.dao.saveBulkArtists(artists);
     }
     
     @Autowired
