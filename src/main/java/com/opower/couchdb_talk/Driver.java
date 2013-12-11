@@ -40,7 +40,7 @@ public class Driver {
     
     private void saveArtists(List<Artist> artists) {
         for (Artist artist : artists) {
-            this.dao.saveArtist(artists.get(0));
+            this.dao.saveArtist(artist);
         }
     }
     
