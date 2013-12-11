@@ -20,7 +20,9 @@ public class Driver {
     public void doStuff() {
         runDiagnostics();
         
-        loadArtists();
+        List<Artist> artists = loadArtists();
+        
+        saveArtists(artists);
         
         
     }
@@ -34,6 +36,12 @@ public class Driver {
         List<Artist> artists = xmlLoader.getArtists();
         LOGGER.log(Level.INFO, "There are {0} artists", artists.size());
         return artists;
+    }
+    
+    private void saveArtists(List<Artist> artists) {
+        for (Artist artist : artists) {
+            this.dao.saveArtist(artists.get(0));
+        }
     }
     
     @Autowired
