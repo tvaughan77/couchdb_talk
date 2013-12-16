@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * @author tomvaughan
  */
-public class JamendoData {
+public class JamendoData extends AbstractCouchDbObject {
 
     private List<Artist> artists;
     private long epoch;

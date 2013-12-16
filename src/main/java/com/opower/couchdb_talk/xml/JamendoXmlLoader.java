@@ -1,7 +1,10 @@
 package com.opower.couchdb_talk.xml;
 
+import com.opower.couchdb_talk.model.Album;
 import com.opower.couchdb_talk.model.Artist;
 import com.opower.couchdb_talk.model.JamendoData;
+import com.opower.couchdb_talk.model.Tag;
+import com.opower.couchdb_talk.model.Track;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -11,6 +14,7 @@ import javax.xml.bind.JAXBException;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
+import org.apache.commons.lang.Validate;
 import org.springframework.beans.factory.annotation.Required;
 
 /**
@@ -32,9 +36,40 @@ public class JamendoXmlLoader implements XmlLoader {
             is = this.getClass().getClassLoader().getResourceAsStream(this.filename);
             JamendoData jamendoData = (JamendoData) this.unmarshaller.unmarshal(new StreamSource(is));
             this.artists = jamendoData.getArtists();
+            
+            assignRandomNumbers();
         } finally {
             if (is != null) {
                 is.close();
+            }
+        }
+    }
+    
+    /*
+     * Part of the 7-databases-in-7-weeks CouchDb homework involves adding random numbers and random views to a bunch 
+     * of things, so hand-jam it in here.
+     */
+    private void assignRandomNumbers() {
+        Validate.notNull(this.artists, "Can't assign random numbers to a null collection of artists");
+        for (Artist artist : this.artists) {
+            artist.setRandom(Math.random());
+            List<Album> albums = artist.getAlbums();
+            if (albums != null) {
+                for (Album album : albums) {
+                    album.setRandom(Math.random());
+                    List<Track> tracks = album.getTracks();
+                    if (tracks != null) {
+                        for (Track track : tracks) {
+                            track.setRandom(Math.random());
+                            List<Tag> tags = track.getTags();
+                            if (tags != null) {
+                                for (Tag tag : tags) {
+                                    tag.setRandom(Math.random());
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }

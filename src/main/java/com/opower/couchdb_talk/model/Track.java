@@ -3,10 +3,10 @@ package com.opower.couchdb_talk.model;
 import java.util.List;
 
 /**
- *
+ * A track on an album
  * @author tomvaughan
  */
-public class Track {
+public class Track extends AbstractRandomCouchDbObject {
     private long id;
     private String name;
     private float duration;

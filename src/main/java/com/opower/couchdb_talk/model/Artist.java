@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * @author tomvaughan
  */
-public class Artist {
+public class Artist extends AbstractRandomCouchDbObject {
     private long id;
     private String name;
     private String url;

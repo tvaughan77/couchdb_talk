@@ -4,7 +4,7 @@ package com.opower.couchdb_talk.model;
  *
  * @author tomvaughan
  */
-public class Tag {
+public class Tag extends AbstractRandomCouchDbObject {
     private String idstr;
     private float weight;
 

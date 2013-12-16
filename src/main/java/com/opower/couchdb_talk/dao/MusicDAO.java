@@ -10,7 +10,7 @@ import java.util.List;
 public interface MusicDAO {
     
     /**
-     * print some simple shit out to see if the configuraiton is ok
+     * print some simple shit out to see if the configuration is ok
      */
     void runDiagnostics();
 
@@ -23,10 +23,10 @@ public interface MusicDAO {
      * Executes a bulk update of a List of Artists
      * @param artists
      */
-    void saveBulkArtists(List<Artist> artists);
+    List<Artist> saveBulkArtists(List<Artist> artists);
 
     /**
      * @param artist Saves an artist
      */
-    void saveArtist(Artist artist);
+    Artist saveArtist(Artist artist);
 }

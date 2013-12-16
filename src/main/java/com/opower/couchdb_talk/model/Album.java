@@ -6,7 +6,7 @@ import java.util.List;
  *
  * @author tomvaughan
  */
-public class Album {
+public class Album extends AbstractRandomCouchDbObject {
     private long id;
     private String name;
     private String url;

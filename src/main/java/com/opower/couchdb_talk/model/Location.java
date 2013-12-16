@@ -3,7 +3,7 @@ package com.opower.couchdb_talk.model;
 /**
  * @author tomvaughan
  */
-public class Location {
+public class Location extends AbstractCouchDbObject {
     private String country;
     private String state;
     private String city;
