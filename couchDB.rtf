@@ -1,0 +1,135 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf390
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\froman\fcharset0 Times-Roman;}
+{\colortbl;\red255\green255\blue255;\red124\green0\blue106;}
+{\*\listtable{\list\listtemplateid1\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}.}{\leveltext\leveltemplateid1\'02\'00.;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid1}
+{\list\listtemplateid2\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}.}{\leveltext\leveltemplateid101\'02\'00.;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid2}
+{\list\listtemplateid3\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}.}{\leveltext\leveltemplateid201\'02\'00.;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid3}
+{\list\listtemplateid4\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}.}{\leveltext\leveltemplateid301\'02\'00.;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid4}}
+{\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}{\listoverride\listid2\listoverridecount0\ls2}{\listoverride\listid3\listoverridecount0\ls3}{\listoverride\listid4\listoverridecount0\ls4}}
+\margl1440\margr1440\vieww12400\viewh11960\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+
+\f0\fs24 \cf0 Couch DB Notes\
+\
+JSON- and REST-based document oriented database\
+Released 2005\
+\
+CouchDB stores documents: JSON objects consisting of key-value pairs.\
+\
+No ad-hoc querying: indexed views are produced by incremental map reduce\
+\
+Written in Erlang (born in a failure tolerant crib)\
+\
+All calls to Couch happen over its REST interface.\
+\
+Replication\
+	One-way or bidirectional\
+	ad-hoc or continuous\
+\
+CouchDB - Futon web interface\
+\
+All documents in CouchDB have an _id field which must be unique and can never be changed.  The _rev field specifies revision. \
+\
+There are no transactions or locking.  To modify an existing record, you read it, then request an update by providing the full document including the _id and _rev.  First come, first served.\
+\
+CouchDB API spec : {\field{\*\fldinst{HYPERLINK "http://wiki.apache.org/couchdb/HTTP_Document_API"}}{\fldrslt http://wiki.apache.org/couchdb/HTTP_Document_API}}\
+	Special fields _id, _rev, _attachments, _deleted, _revisions, _revs_info, _conflicts, etc can be accessed with "?revs_info=true" for example\
+	Create docs with PUT or POST\
+	Update doc with a PUT.  Must include the rev.  If rev doesn't match, a 409 is returned\
+	Avoid POST because proxies sometimes re-post\
+	Non-standard "COPY" extension to HTTP allows you to copy a doc from source to target on the server side without first retrieving the document\
+	GET /somedatabase/_all_docs to return all docs\
+	\
+Documents can have attachments like the email protocol\
+\
+Day 1 homework:\
+\pard\tx220\tx720\pardeftab720\li720\fi-720\sa260
+\ls1\ilvl0
+\f1\fs26 \cf0 {\listtext	1.	}Use cURL to 
+\fs22 PUT 
+\fs26 a new document into the music database with a specific 
+\fs22 _id 
+\fs26 of your choice. \uc0\u8232 tomvaughan:~ $ curl -XPUT http://localhost:5984/music/my_own_doc -d '\{\}'\
+\{"ok":true,"id":"my_own_doc","rev":"1-967a00dff5e02add41819138abb3284d"\}\
+{\listtext	2.	}Use 
+\fs22 curl 
+\fs26 to create a new database with a name of your choice, and then delete that database also via cURL. \uc0\u8232 tomvaughan:~ $ curl -XPUT http://localhost:5984/another_db -d '\{\}'\
+\{"ok":true\}\
+tomvaughan:~ $ curl -XDELETE http://localhost:5984/another_db\
+\{"ok":true\}\
+{\listtext	3.	}Again using cURL, create a new document that contains a text document as an attachment. Lastly, craft and execute a cURL request that will return just that document\'92s attachment. \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+
+\f0\fs24 \cf0 curl -XPUT http://localhost:5984/music/d9a50617cb555789595022f5d6030c19 -d \\\
+'\{\
+    "_attachments": \{\
+        "foo.txt": \{\
+            "content_type": "text/plain", \
+            "data": "d2hhdGV2ZXIK"\
+        \}\
+    \}, \
+    "_id": "d9a50617cb555789595022f5d6030c19", \
+    "_rev": "3-4f4ee4f4625a214c2f0ad0d94e012782"\
+\}'\
+\
+# Getting just attachment out\
+curl http://localhost:5984/music/d9a50617cb555789595022f5d6030c19/foo.txt\
+\
+Executing a temporary view through CURL\
+\pard\pardeftab720
+
+\f1\b\fs22 \cf2 curl -X POST \\\
+  http://localhost:5984/music/_temp_view \\\
+  -H "Content-Type: application/json" \\\
+  -d '\{"map":"function(doc)\{emit(doc._id,\{rev:doc._rev\});\}"\}'\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+
+\f0\b0\fs24 \cf0 \
+Temporary views execute the provided map for each and every doc in the DB.  Used for development purposes only.  For production code, store your views in _design documents_\
+\
+Couch vs couchbase {\field{\*\fldinst{HYPERLINK "http://www.couchbase.com/couchbase-vs-couchdb"}}{\fldrslt http://www.couchbase.com/couchbase-vs-couchdb}}\
+\
+CouchDB doesn't have a spring-data project, has a 2007-era "couchdb4j", a 2010-era "opencredo-couchdb" project and an alpha "couch4j" github project\
+\
+Limit allowed on the results of a view query and allows the start of the query to vary by key:\
+	curl http://localhost:5984/test-db/_design/artists/_view/by_name?limit=5\
+\
+	curl http://localhost:5984/db-test/_design/artists/_view/by_name?limit=5\\&startkey=%22C%22\
+\
+Or just limit between start key and end key\
+	curl http://localhost:5984/db-test/_design/artists/_view/by_name?startkey=%22C%22\\&endkey=%22D%22\
+\
+\
+Day 2 homework\
+\pard\tx220\tx720\pardeftab720\li720\fi-720\sa260
+\ls2\ilvl0
+\f1\fs26 \cf0 {\listtext	1.	}We\'92ve seen that the 
+\fs22 emit() 
+\fs26 method can output keys that are strings. What other types of values does it support? What happens when you emit an array of values as a key? \
+\pard\tx720\pardeftab720\sa260
+\cf0 It just works with an array output: \
+function(doc) \{\
+    if ('name' in doc) \{\
+        emit(doc.name, doc.albums);\
+    \}\
+\}\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+
+\f0\fs24 \cf0 \
+\pard\tx220\tx720\pardeftab720\li720\fi-720\sa260
+\ls3\ilvl0
+\f1\fs26 \cf0 {\listtext	1.	}Find a list of available URL parameters (like 
+\fs22 limit 
+\fs26 and 
+\fs22 startkey
+\fs26 ) that can be appended to view requests and what they do. \
+\pard\tx720\pardeftab720\sa260
+\cf0 	{\field{\*\fldinst{HYPERLINK "http://docs.couchdb.org/en/latest/api/ddoc/views.html#api-ddoc-view"}}{\fldrslt http://docs.couchdb.org/en/latest/api/ddoc/views.html#api-ddoc-view}}\
+\pard\tx220\tx720\pardeftab720\li720\fi-720\sa260
+\ls4\ilvl0\cf0 {\listtext	1.	}Craft a cURL request that will retrieve a random artist. \
+\pard\tx720\pardeftab720\sa260
+\cf0 curl "http://localhost:5984/music/_design/artists/_view/random?limit=1&start_key=`ruby -e 'puts rand'`"\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+
+\f0\fs24 \cf0 \
+}

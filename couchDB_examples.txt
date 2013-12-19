@@ -1,0 +1,69 @@
+export CDB="http://localhost:5984"
+
+# creates new "articles" database
+curl -XPUT $CDB/articles
+
+# creates a new (empty) document called "my_doc"
+curl -XPOST $CDB/articles/my_doc -d '{}'
+
+# updates that doc with some content
+curl -XPUT $CDB/articles/my_doc -d '{"_id":"my_doc","_rev":"XXX", "contents":"some random shit"}'
+
+# shows revisions of document
+curl $CDB/articles/my_doc?revs_info=true | json
+
+# deletes a document (actually, marks it for deletion)
+curl -XDELETE $CDB/articles/my_doc?rev=YYY
+# or
+curl -XDELETE $CDB/articles/my_doc -H "If-Match: YYY"
+
+# Ask couchDB for UUIDs instead of sending it my own "my_doc" id
+curl -X GET $CDB/_uuids?count=5 | json
+
+===  Attachments  ====================================
+
+# Execute an ad-hoc query
+curl -X POST \
+  $CDB/music/_temp_view \
+  -H "Content-Type: application/json" \
+  -d '{"map":"function(doc){emit(doc._id,{name:doc.name});}"}'
+
+# Attach a Text File to a document
+echo "hello world" | base64
+
+curl -XPUT $CDB/music/9c9f53fd6aef822e494a4715820c1de9 -d \
+'{
+    "_attachments": {
+        "foo.txt": {
+            "content_type": "text/plain", 
+            "data": "d2hhdGV2ZXIK"
+        }
+    }, 
+    "_id": "9c9f53fd6aef822e494a4715820c1de9", 
+    "_rev": "1-e002e02999c06fb82c64076b10e68baa"
+}'
+
+Retrieving just the attachment
+curl $CDB/music/XXX/foo.txt
+
+
+===  Changes  ==========================================
+
+curl $CDB/music/_changes
+
+make a change to some doc
+
+curl $CDB/music/_changes?since=XXX   (xxx= last_seq from previous curl)
+
+
+# long polling (doesn't appear to work on my OSX curl ?)
+curl http://localhost:5984/music/_changes?since=386&feed=longpoll
+
+# node-based long polling
+node src/main/js/watch_changes_longpolling.js music
+
+# continuous
+curl 'http://localhost:5984/music/_changes?since=97&feed=continuous'
+
+
+
